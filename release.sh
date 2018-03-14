@@ -9,14 +9,15 @@ if [ -n "$repo_state" ]; then
 fi
 
 sha=$(git rev-parse --short master)
+pre=$(basename $(pwd))
 tmpdir=$(mktemp -d)
-zip_name="CRLD-${sha}.zip"
+zip_name="${pre}-${sha}.zip"
 
-git archive master --prefix=CRLD/ | tar -x -C "$tmpdir"
-echo "$sha" >> "$tmpdir/CRLD/version.txt"
+git archive master --prefix="$pre/" | tar -x -C "$tmpdir"
+echo "$sha" >> "$tmpdir/$pre/version.txt"
 cd "$tmpdir"
-zip -rq "$zip_name" CRLD
-rm -r ./CRLD/
+zip -rq "$zip_name" "$pre"
+rm -r ./"${pre}"/
 cd - > /dev/null
 
 mount_path=$(mount | grep ' /tmp ')
